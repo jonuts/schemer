@@ -1,4 +1,5 @@
 require "schemer/version"
+require "schemer/property"
 require "schemer/builder"
 
 module Schemer

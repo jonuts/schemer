@@ -4,11 +4,11 @@ RSpec.describe Schemer::Definition do
   end
 
   it "has an empty properties collection" do
-    expect(described_class.new(:foo).props.class).to eql(Schemer::Properties)
+    expect(described_class.new(:foo, :object).props.class).to eql(Schemer::Properties)
   end
 
   describe "adding properties" do
-    let(:definition) { Schemer::Definition.new(:address) }
+    let(:definition) { Schemer::Definition.new(:address, :object) }
 
     shared_examples_for "added props" do
       it "has all the props" do

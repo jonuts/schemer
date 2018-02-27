@@ -9,11 +9,11 @@ RSpec.describe Schemer::Builder do
       end
 
       it "has empty definitions" do
-        expect(schema.definitions).to eql([])
+        expect(schema.definitions).to eql({})
       end
 
       it "has empty schemas" do
-        expect(schema.schemas).to eql([])
+        expect(schema.schemas).to eql({})
       end
 
       it "is root" do
@@ -44,7 +44,7 @@ RSpec.describe Schemer::Builder do
 
           let(:opts) { {} }
 
-          subject { schema.definitions.first }
+          subject { schema.definitions[:foo] }
 
           it "stores a Definition" do
             expect(subject.class).to eql(Schemer::Definition)
@@ -85,7 +85,7 @@ RSpec.describe Schemer::Builder do
 
           let(:opts) { {} }
 
-          subject { schema.schemas.first }
+          subject { schema.schemas[:foo] }
 
           it "stores a Definition" do
             expect(subject.class).to eql(Schemer::Definition)

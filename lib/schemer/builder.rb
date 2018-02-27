@@ -8,8 +8,8 @@ module Schemer
           klass.root!
         end
 
-        klass.instance_variable_set(:@definitions, [])
-        klass.instance_variable_set(:@schemas, [])
+        klass.instance_variable_set(:@definitions, {})
+        klass.instance_variable_set(:@schemas, {})
         klass.instance_variable_set(:@props, Properties.new)
       end
 
@@ -25,16 +25,21 @@ module Schemer
 
       def definition(name, opts={}, &block)
         opts[:type] = :object
-        definitions << build_definition(name, opts, &block)
+        definitions[name] = build_definition(name, opts, &block)
       end
 
       def schema(name, opts={}, &block)
-        schemas << build_definition(name, opts, &block)
+        schemas[name] = build_definition(name, opts, &block)
       end
 
       def property(name, opts={})
         raise DefinitionError, "Properties cannot be added to root schemas" if root?
         props.add name, opts
+      end
+
+      def properties(&block)
+        raise DefinitionError, "Properties cannot be added to root schemas" if root?
+        props.instance_eval(&block)
       end
 
       private

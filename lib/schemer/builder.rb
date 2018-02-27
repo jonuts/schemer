@@ -2,7 +2,7 @@ module Schemer
   class Builder
     class <<self
       def inherited(klass)
-        klass.root!
+        klass.root! unless root?
       end
 
       def root!

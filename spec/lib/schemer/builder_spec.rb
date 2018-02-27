@@ -17,6 +17,15 @@ RSpec.describe Schemer::Builder do
         expect(schema).to be_root
       end
     end
+
+    describe "child schema" do
+      let(:root) { Class.new(Schemer::Builder) }
+      let(:child) { Class.new(root) }
+
+      it "is not root" do
+        expect(child).to_not be_root
+      end
+    end
   end
 end
 

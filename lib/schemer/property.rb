@@ -1,6 +1,6 @@
 module Schemer
   class Property
-    VALID_TYPES = %i(string integer)
+    VALID_TYPES = %i(string integer ref)
 
     def initialize(name, opts={})
       @name = name
@@ -8,6 +8,8 @@ module Schemer
       @required = @opts.delete(:required)
       assert_valid_type!
     end
+
+    attr_reader :name
 
     def required?
       !!@required

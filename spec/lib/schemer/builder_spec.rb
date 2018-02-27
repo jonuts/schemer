@@ -127,5 +127,90 @@ RSpec.describe Schemer::Builder do
       end
     end
   end
+
+  describe 'simple schema' do
+    let(:schema) do
+      Class.new(Schemer::Builder) do
+        schema :person do
+          properties do
+            required do
+              string :name
+            end
+
+            integer :age
+          end
+        end
+      end
+    end
+
+  end
+
+  describe 'schema with inheritance' do
+    let(:root) do
+      Class.new(Schemer::Builder) do
+        definition :address do
+          properties do
+            required do
+              string :street
+              string :city
+            end
+
+            string :street2
+            string :phone
+          end
+        end
+
+        definition :name do
+          properties do
+            required do
+              string :first_name
+              string :last_name
+            end
+
+            string :middle_name
+          end
+        end
+      end
+    end
+
+    let(:person) do
+      Class.new(root) do
+        properties do
+          required do
+            ref :name
+            ref :address
+          end
+        end
+      end
+    end
+
+    let(:patient) do
+      Class.new(person) do
+        properties do
+          string :dob
+        end
+      end
+    end
+
+    let(:doctor) do
+      Class.new(person) do
+        properties do
+          required do
+            integer :license
+          end
+        end
+      end
+    end
+
+    describe 'patient' do
+      let(:per_fields) do
+        [:name, :address]
+      end
+
+      it 'has parent fields' do
+        expect(patient.full_props.map(&:name)).to match_array(per_fields + [:dob])
+      end
+    end
+  end
 end
 

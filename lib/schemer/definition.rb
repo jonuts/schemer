@@ -5,7 +5,7 @@ module Schemer
       @container = opts.delete(:container)
       @type = opts.delete(:type) || :object
       @opts = opts
-      @props = Properties.new
+      @props = Properties.new(container: self)
 
       instance_eval(&block) if block_given?
     end
@@ -18,6 +18,10 @@ module Schemer
 
     def properties(&block)
       props.instance_eval(&block)
+    end
+
+    def find_definition(name)
+      @container.find_definition(name)
     end
   end
 end

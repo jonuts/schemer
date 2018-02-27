@@ -3,6 +3,7 @@ module Schemer
     include Enumerable
 
     def initialize(defaults={})
+      @container = defaults.delete(:container)
       @defaults = defaults
       @props = []
     end
@@ -13,19 +14,24 @@ module Schemer
       props.each(&block)
     end
 
-    def add(name, opts={})
+    def add(type, name, opts={})
+      opts[:type] = type
       props << Property.new(name, @defaults.merge(opts))
     end
 
     # Create a Property collection and add them to collection with required: true
     def required(&block)
-      Properties.new(required: true).instance_eval(&block).each do |p|
+      Properties.new(required: true, container: @container).instance_eval(&block).each do |p|
         props << p
       end
     end
 
     def string(field, opts={})
-      add(field, opts.merge(type: :string))
+      add(:string, field, opts)
+    end
+
+    def ref(field, definition=nil)
+      add(:ref, field, definition: find_definition(definition || field))
     end
 
     def all
@@ -34,6 +40,10 @@ module Schemer
 
     def size
       props.size
+    end
+
+    def find_definition(definition)
+      @container.find_definition(definition)
     end
   end
 end

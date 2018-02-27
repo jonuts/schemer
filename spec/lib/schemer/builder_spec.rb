@@ -43,6 +43,23 @@ RSpec.describe Schemer::Builder do
         end
       end
     end
+
+    describe 'adding schemas' do
+      let(:schema) { Class.new(Schemer::Builder) }
+
+      context 'blank schema' do
+        it "adds the schema to the collection" do
+          expect { schema.schema(:foo) {} }.to change {
+            schema.schemas.size
+          }.from(0).to(1)
+        end
+
+        it "stores a Definition" do
+          schema.schema(:foo) {}
+          expect(schema.schemas.first.class).to eql(Schemer::Definition)
+        end
+      end
+    end
   end
 end
 

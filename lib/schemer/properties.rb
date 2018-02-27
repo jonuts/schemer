@@ -27,7 +27,7 @@ module Schemer
     end
 
     def integer(field, opts={})
-      add prop(:array, field, opts)
+      add prop(:integer, field, opts)
     end
 
     def array(field, opts={})

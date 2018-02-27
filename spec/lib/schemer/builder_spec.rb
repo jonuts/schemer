@@ -59,6 +59,57 @@ RSpec.describe Schemer::Builder do
 
   end
 
-  describe 'simple schema'
+  describe 'simple schema' do
+    let(:schema) do
+      Class.new(Schemer::Builder) do
+        definition :name do
+          properties do
+            required do
+              string :first_name
+              string :last_name
+            end
+
+            string :middle_name
+          end
+        end
+
+        schema :person do
+          properties do
+            required do
+              ref :name
+
+              integer :age
+            end
+
+            string :gender
+          end
+        end
+      end
+    end
+
+    describe 'rendering' do
+      let(:expected) do
+        {
+          type: :object,
+          required: [:name, :age],
+          properties: {
+            name: {
+              type: :object,
+              required: [:first_name, :last_name],
+              properties: {
+                first_name: {type: :string},
+                last_name: {type: :string},
+                middle_name: {type: :string}
+              }
+            },
+            age: {type: :integer},
+            gender: {type: :string}
+          }
+        }
+      end
+
+      it { expect(schema.schemas.person.to_hash).to eql(expected) }
+    end
+  end
 end
 

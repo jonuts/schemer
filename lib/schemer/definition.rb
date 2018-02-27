@@ -1,10 +1,11 @@
 module Schemer
   class Definition
     def initialize(name, type, opts={}, &block)
-      @container = opts.delete(:container)
-      @props     = Properties.new(container: self)
-      @name      = name
-      @type      = type
+      @container   = opts.delete(:container)
+      @definitions = OpenStruct.new
+      @props       = Properties.new(container: self)
+      @name        = name
+      @type        = type
 
       instance_eval(&block) if block_given?
     end
@@ -12,7 +13,7 @@ module Schemer
     attr_reader :definitions, :props, :container, :name, :type
 
     def find_definition(name)
-      @definitions[name] || @container&.definitions&.[](name)
+      @definitions[name] || @container.definitions[name]
     end
 
     def property(name, opts={})

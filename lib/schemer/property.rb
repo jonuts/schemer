@@ -1,6 +1,6 @@
 module Schemer
   class Property
-    VALID_TYPES = %i(string integer ref)
+    VALID_TYPES = %i(string integer ref array)
 
     def initialize(type, field, opts={})
       @type = type

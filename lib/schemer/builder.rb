@@ -9,11 +9,11 @@ module Schemer
       end
 
       def schema(name, type=:object, &block)
-        schemas[name] = Definition.new(name, type, &block)
+        schemas[name] = Definition.new(name, type, container: self, &block)
       end
 
       def definition(name, &block)
-        definitions[name] = Definition.new(name, :object, &block)
+        definitions[name] = Definition.new(name, :object, container: self, &block)
       end
 
       attr_reader :schemas, :definitions

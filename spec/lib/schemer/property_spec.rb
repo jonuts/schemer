@@ -5,10 +5,10 @@ RSpec.describe Schemer::Property do
     end
 
     it "requires a type" do
-      expect {Schemer::Property.new(:foo)}.to raise_error(ArgumentError)
+      expect {Schemer::Property.new(:foo)}.to raise_error(Schemer::InvalidPropertyTypeError)
     end
 
-    it "requieres a valid type" do
+    it "requires a valid type" do
       expect {Schemer::Property.new(:foo, type: :integer)}.to_not raise_error
       expect {Schemer::Property.new(:foo, type: :invalid)}.to raise_error(Schemer::InvalidPropertyTypeError)
     end

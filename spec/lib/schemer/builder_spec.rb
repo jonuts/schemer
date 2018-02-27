@@ -37,9 +37,33 @@ RSpec.describe Schemer::Builder do
           }.from(0).to(1)
         end
 
-        it "stores a Definition" do
-          schema.definition(:foo) {}
-          expect(schema.definitions.first.class).to eql(Schemer::Definition)
+        context do
+          before do
+            schema.definition(:foo, opts) {}
+          end
+
+          let(:opts) { {} }
+
+          subject { schema.definitions.first }
+
+          it "stores a Definition" do
+            expect(subject.class).to eql(Schemer::Definition)
+          end
+
+          it 'sets definition container' do
+            expect(subject.container).to eql(schema)
+          end
+
+          it 'sets type to :object' do
+            expect(subject.type).to eql(:object)
+          end
+
+          context 'when provided with different type' do
+            let(:opts) { {type: :array} }
+            it 'overrides type to :object' do
+              expect(subject.type).to eql(:object)
+            end
+          end
         end
       end
     end
@@ -54,9 +78,33 @@ RSpec.describe Schemer::Builder do
           }.from(0).to(1)
         end
 
-        it "stores a Definition" do
-          schema.schema(:foo) {}
-          expect(schema.schemas.first.class).to eql(Schemer::Definition)
+        context do
+          before do
+            schema.schema(:foo, opts) {}
+          end
+
+          let(:opts) { {} }
+
+          subject { schema.schemas.first }
+
+          it "stores a Definition" do
+            expect(subject.class).to eql(Schemer::Definition)
+          end
+
+          it 'sets schema container' do
+            expect(subject.container).to eql(schema)
+          end
+
+          it 'sets type to :object' do
+            expect(subject.type).to eql(:object)
+          end
+
+          context 'when provided with different type' do
+            let(:opts) { {type: :array} }
+            it 'allows different type' do
+              expect(subject.type).to eql(:array)
+            end
+          end
         end
       end
     end

@@ -1,5 +1,8 @@
 RSpec.describe Schemer::Builder do
   describe "building" do
+    let(:root) { Class.new(Schemer::Builder) }
+    let(:child) { Class.new(root) }
+
     describe "root schema" do
       let(:schema) do
         Class.new(Schemer::Builder)
@@ -19,9 +22,6 @@ RSpec.describe Schemer::Builder do
     end
 
     describe "child schema" do
-      let(:root) { Class.new(Schemer::Builder) }
-      let(:child) { Class.new(root) }
-
       it "is not root" do
         expect(child).to_not be_root
       end
@@ -57,6 +57,24 @@ RSpec.describe Schemer::Builder do
         it "stores a Definition" do
           schema.schema(:foo) {}
           expect(schema.schemas.first.class).to eql(Schemer::Definition)
+        end
+      end
+    end
+
+    describe 'adding properties' do
+      context 'when root schema' do
+        it 'is not allowed' do
+          expect { root.property(:foo, type: :string) }.to raise_error(Schemer::DefinitionError)
+        end
+      end
+
+      context 'when child' do
+        before do
+          child.property :foo, type: :string
+        end
+
+        it 'adds the property' do
+          expect(child.props.first.class).to eql(Schemer::Property)
         end
       end
     end

@@ -5,5 +5,6 @@ require "schemer/definition"
 require "schemer/builder"
 
 module Schemer
-  InvalidPropertyTypeError = Class.new(StandardError)
+  DefinitionError = Class.new(StandardError)
+  InvalidPropertyTypeError = Class.new(DefinitionError)
 end

@@ -1,8 +1,7 @@
 # Schemer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/schemer`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Build and validate [JSON Schemas](http://json-schema.org/) with a
+friendly ruby API. Very much not useable yet.
 
 ## Installation
 
@@ -22,7 +21,76 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Building
+
+Define your schemas:
+
+```ruby
+class AwesomeSchema < ::Schemer::Builder
+  # You can create shared definitions to be reused across schemas:
+  definition :address do
+    property :street, type: :string, required: true
+    property :street2, type: :string
+    property :city, type: :string, required: true
+    property :state, type: :string, required: true
+  end
+
+  # Properties can also be defined like so:
+  definition :address do
+    properties do
+      # Define required properties in a required block:
+      required do
+        string :street
+        string :city
+      end
+
+      # ... or inline
+      string :state, required: true
+      string :street2
+    end
+  end
+
+  # Definitions can be attached to schemas using the :ref property:
+  schema :person do
+    properties do
+      required do
+        ref :address
+        integer :age
+        # Person schema will now have :address and :age properties, both
+        # required. :address will be type :object with definition as
+        # created above
+      end
+    end
+  end
+end
+```
+
+You can access any schemas defined in your builder class and render them
+into a hash:
+
+```ruby
+AwesomeSchema.schemas.person.to_hash
+
+# will render something like such:
+
+{
+  type: :object,
+  required: [:address, :age],
+  properties: {
+    address: {
+      type: :object,
+      required: [:street, :city, :state],
+      properties: {
+        street: {type: :string},
+        street2: {type: :string},
+        city: {type: :string},
+        state: {type: :string}
+      }
+    },
+    age: {type: :integer}
+  }
+}
+```
 
 ## Development
 

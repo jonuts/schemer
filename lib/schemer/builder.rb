@@ -3,7 +3,10 @@ module Schemer
     class <<self
       def inherited(klass)
         klass.root! unless root?
+        klass.instance_variable_set(:@definitions, [])
       end
+
+      attr_reader :definitions
 
       def root!
         @root = true
@@ -13,12 +16,12 @@ module Schemer
         !!@root
       end
 
-      def definitions
+      def schemas
         []
       end
 
-      def schemas
-        []
+      def definition(name, opts={}, &block)
+        definitions << Definition.new(name, opts, &block)
       end
     end
   end

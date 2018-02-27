@@ -26,6 +26,23 @@ RSpec.describe Schemer::Builder do
         expect(child).to_not be_root
       end
     end
+
+    describe 'adding definitions' do
+      let(:schema) { Class.new(Schemer::Builder) }
+
+      context 'blank definition' do
+        it "adds the definition to the collection" do
+          expect { schema.definition(:foo) {} }.to change {
+            schema.definitions.size
+          }.from(0).to(1)
+        end
+
+        it "stores a Definition" do
+          schema.definition(:foo) {}
+          expect(schema.definitions.first.class).to eql(Schemer::Definition)
+        end
+      end
+    end
   end
 end
 

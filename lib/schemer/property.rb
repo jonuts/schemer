@@ -5,7 +5,16 @@ module Schemer
     def initialize(name, opts={})
       @name = name
       @opts = opts
+      @required = @opts.delete(:required)
       assert_valid_type!
+    end
+
+    def required?
+      !!@required
+    end
+
+    def type
+      @opts[:type]
     end
 
     private
